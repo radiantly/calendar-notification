@@ -25,7 +25,7 @@ calendar-notification prev # Show previous month
 
 ### Results
 
-On running `./bench.sh`, the Rust variant is found to be around 1.8x faster than the shell script. A screenshot of the benchmark can be seen below.
+On running `./benchmark.sh`, the Rust variant is found to be around 1.8x faster than the shell script. A screenshot of the benchmark can be seen below.
 
 ![Benchmark results](./assets/bench.png)
 

@@ -3,14 +3,22 @@ use std::env;
 use std::error::Error;
 use std::fs::OpenOptions;
 use std::io::{Read, Seek, SeekFrom, Write};
+use std::path::Path;
 use std::process::Command;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    // Use $XDG_RUNTIME_DIR if present, else use /tmp
+    let dir_name = match env::var("XDG_RUNTIME_DIR") {
+        Ok(dir) => dir,
+        _ => "/tmp".to_owned(),
+    };
+    let dir_path = Path::new(&dir_name);
+
     let mut f = OpenOptions::new()
         .read(true)
         .write(true)
         .create(true)
-        .open("/tmp/calendar_notification_month")?;
+        .open(dir_path.join("calendar_notification_month"))?;
 
     let mut contents = String::new();
 
@@ -61,7 +69,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             "-h",
             "string:x-canonical-private-synchronous:calendar",
             title,
-            body,
+            format!("{}\n\n<i>       ~ calendar</i> 󰸗 ", body).as_ref(),
         ])
         .output()?;
 
