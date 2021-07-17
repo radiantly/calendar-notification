@@ -2,11 +2,10 @@
 
 <img src="https://raw.githubusercontent.com/chebro/calendar-notification/master/assets/demo.gif" alt="demo" align="right">
 
-Calendar notifications for desktops running the dunst notification daemon.
+Calendar notifications for linux desktops with performance in mind.
 
 ## Dependencies
 
-- [dunstify](https://github.com/dunst-project/dunst)
 - [cal](<https://en.m.wikipedia.org/wiki/Cal_(command)>)
 
 ## Introduction

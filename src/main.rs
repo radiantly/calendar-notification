@@ -1,4 +1,5 @@
 use chrono::{Datelike, Local};
+use regex::Regex;
 use std::env;
 use std::error::Error;
 use std::fs::OpenOptions;
@@ -43,11 +44,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     // If current month, highlight the date
     if diff == 0 {
         let today = Local::now().day();
-        cal_out = cal_out.replacen(
-            format!(" {} ", today).as_str(),
-            format!(" <u><b>{}</b></u> ", today).as_str(),
-            1,
-        );
+        cal_out = Regex::new(format!(r"([^\d])({})([^\d])", today).as_str())?
+            .replace(cal_out.as_str(), "$1<u><b>$2</b></u>$3")
+            .to_string();
     }
 
     // Retrieve the position of the first linebreak
@@ -64,12 +63,21 @@ fn main() -> Result<(), Box<dyn Error>> {
     let body = cal_out[first_line_end + 1..].trim_end();
 
     // Display notification
-    Command::new("dunstify")
+    Command::new("gdbus")
         .args(&[
-            "-h",
-            "string:x-canonical-private-synchronous:calendar",
+            "call",
+            "--session",
+            "--dest=org.freedesktop.Notifications",
+            "--object-path=/org/freedesktop/Notifications",
+            "--method=org.freedesktop.Notifications.Notify",
+            "calendar-notification",
+            "1337",
+            "",
             title,
             format!("{}\n\n<i>       ~ calendar</i> 󰸗 ", body).as_ref(),
+            "[]",
+            "{}",
+            "20000",
         ])
         .output()?;
 
