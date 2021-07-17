@@ -60,26 +60,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     })();
 
     let title = &cal_out[..first_line_end];
-    let body = cal_out[first_line_end + 1..].trim_end();
+    let body_trimmed = cal_out[first_line_end + 1..].trim_end();
+    let body = format!("{}\n\n<i>       ~ calendar</i> 󰸗 ", body_trimmed);
 
     // Display notification
-    Command::new("gdbus")
-        .args(&[
-            "call",
-            "--session",
-            "--dest=org.freedesktop.Notifications",
-            "--object-path=/org/freedesktop/Notifications",
-            "--method=org.freedesktop.Notifications.Notify",
-            "calendar-notification",
-            "1337",
-            "",
-            title,
-            format!("{}\n\n<i>       ~ calendar</i> 󰸗 ", body).as_ref(),
-            "[]",
-            "{}",
-            "20000",
-        ])
-        .output()?;
+    calendar_notification::send_notification(title, &body)?;
 
     // Truncate and write to file
     f.set_len(0)?;

@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 chrono = "0.4"
 regex = "1.5"
+zbus = "1.9"
+zvariant = "2.7"
